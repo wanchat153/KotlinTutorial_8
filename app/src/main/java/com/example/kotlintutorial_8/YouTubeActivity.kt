@@ -1,6 +1,7 @@
 package com.example.kotlintutorial_8
 
 import android.os.Bundle
+import android.util.Log
 import android.view.ActionProvider
 import android.view.ViewGroup
 import android.widget.Button
@@ -15,6 +16,8 @@ const val YOUTUBE_VIDEO_ID = "ElpitAfkRS4"
 const val YOUTUBE_PLAYLIST = "PLXtTjtWmQhg1SsviTmKkWO5n0a_-T0bnD"
 
 class YouTubeActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
+
+    private val TAG = "YouTubeActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +39,15 @@ class YouTubeActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListen
         playerView.initialize(getString(R.string.GOOGLE_API_KEY), this)
     }
 
-    override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider?, youTubePlayer: YouTubePlayer?,
+                                         wasRestored: Boolean) {
+        Log.d(TAG, "onInitializationSuccess: provider is ${provider?.javaClass}")
+        Log.d(TAG, "onInitializationSuccess: youTubePlayer is ${youTubePlayer?.javaClass}")
+        Toast.makeText(this, "Initialized YouTube Player successfully", Toast.LENGTH_SHORT).show()
+
+        if (!wasRestored){
+            youTubePlayer?.cueVideo(YOUTUBE_VIDEO_ID)
+        }
     }
 
     override fun onInitializationFailure(provider: YouTubePlayer.Provider?,
