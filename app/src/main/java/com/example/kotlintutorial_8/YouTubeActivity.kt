@@ -1,8 +1,10 @@
 package com.example.kotlintutorial_8
 
 import android.os.Bundle
+import android.view.ActionProvider
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
@@ -30,13 +32,23 @@ class YouTubeActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListen
         playerView.layoutParams = ConstraintLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         layout.addView(playerView)
+
+        playerView.initialize(getString(R.string.GOOGLE_API_KEY), this)
     }
 
     override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onInitializationFailure(provider: YouTubePlayer.Provider?,
+                                         youTubeInitializationResult: YouTubeInitializationResult?) {
+        val REQUEST_CODE = 0
+
+        if (youTubeInitializationResult?.isUserRecoverableError == true){
+            youTubeInitializationResult.getErrorDialog(this, REQUEST_CODE).show()
+        }else{
+            val errorManage = "There was an error initizing the YoutubePlayer ($youTubeInitializationResult)"
+            Toast.makeText(this, errorManage, Toast.LENGTH_LONG).show()
+        }
     }
 }
